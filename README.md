@@ -124,15 +124,7 @@ Additionally, sentiment does not necessarily align with viewer behavior. Highly 
 
 These findings suggest that the issue is not NLP itself, but the use of a coarse sentiment proxy that fails to capture semantic intent, novelty, or curiosity.
 
-## 6. Model Interpretability Insights
-
-Feature importance analysis from the tuned Random Forest reinforces these conclusions. Engagement metrics dominate the importance rankings, followed by duration and timing variables.
-
-Channel identifiers appear among the top features, reflecting systematic differences in audience size and brand recognition across creators. While informative, this also highlights a potential limitation: channel-level features may partially encode prior popularity rather than intrinsic video quality.
-
-SHAP analysis further confirms that engagement and timing features consistently drive predictions across view categories, while sentiment-related features contribute little to marginal prediction changes.
-
-## 7. Limitations
+## 6. Limitations
 
 Several limitations should be acknowledged:
 
@@ -141,7 +133,7 @@ Several limitations should be acknowledged:
 -Static engagement ratios: Engagement metrics are measured post-publication and may not reflect early-stage prediction scenarios.
 -Domain specificity: Results are based on baking-related content and may not generalize to other YouTube niches.
 
-## 8. Conclusion and Next Steps
+## 7. Conclusion and Next Steps
 
 This project demonstrates that YouTube video performance can be predicted reasonably well using metadata alone, with Random Forest models achieving strong accuracy and macro F1 scores. Engagement and timing features emerge as the most reliable predictors, while simple title sentiment features provide limited additional value.
 
