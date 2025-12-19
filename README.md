@@ -13,16 +13,16 @@ The dataset consists of YouTube videos collected via the YouTube Data API from a
 
 ### Key Feature Groups
 
--Metadata Features
--Engagement metrics: likes per view, comments per view, engagement rate
--Temporal features: year, month, hour of upload, day of week
--Video properties: duration (seconds), duration category
--Channel identifiers (one-hot encoded)
--Caption availability and timing indicators
+- Metadata Features
+- Engagement metrics: likes per view, comments per view, engagement rate
+- Temporal features: year, month, hour of upload, day of week
+- Video properties: duration (seconds), duration category
+- Channel identifiers (one-hot encoded)
+- Caption availability and timing indicators
 
 NLP Features
--Title sentiment score (continuous polarity)
--Title sentiment label (categorical)
+- Title sentiment score (continuous polarity)
+- Title sentiment label (categorical)
 
 The target variable is a multi-class categorical label representing view count ranges. Because these classes are imbalanced, macro F1 score was used as the primary evaluation metric to ensure performance across all view categories.
 
@@ -30,15 +30,15 @@ The target variable is a multi-class categorical label representing view count r
 
 ### Baseline Models
 To establish performance benchmarks, the following models were trained on both feature sets:
--Dummy Classifier (most frequent)
--Logistic Regression
--Decision Tree
--Random Forest
+- Dummy Classifier (most frequent)
+- Logistic Regression
+- Decision Tree
+- Random Forest
 
 All models were implemented using a unified preprocessing pipeline with:
--Standardization of numeric features
--One-hot encoding of categorical variables
--Stratified train/test split (80/20)
+- Standardization of numeric features
+- One-hot encoding of categorical variables
+- Stratified train/test split (80/20)
 
 ### Hyperparameter Tuning
 Given its strong baseline performance, Random Forest was further optimized using 5-fold cross-validation and macro F1 scoring. A reasonable but non-exhaustive grid was used to balance runtime and performance gains.
@@ -48,17 +48,17 @@ A tuned Gradient Boosting classifier was also evaluated on the metadata + NLP fe
 
 ### Interpretability
 To understand feature influence, two interpretability approaches were used:
--Built-in Random Forest feature importances
--SHAP values for global and interaction-level explanations
+- Built-in Random Forest feature importances
+- SHAP values for global and interaction-level explanations
 
 ## 4. Results and Interpretation
 
 ### Model Performance Summary
 
 The table below summarizes final model performance:
--Best overall model: Tuned Random Forest (metadata only)
--Test Accuracy: ~0.75
--Test Macro F1: ~0.63
+- Best overall model: Tuned Random Forest (metadata only)
+- Test Accuracy: ~0.75
+- Test Macro F1: ~0.63
 
 Notably, metadata-only Random Forest slightly outperformed all metadata + NLP models, including tuned Gradient Boosting. This indicates that structural engagement signals dominate predictive power in this task.
 
@@ -92,23 +92,19 @@ SHAP analysis further confirms that engagement and timing features consistently 
 
 Several limitations should be acknowledged:
 
--Simplistic NLP representation
-Using a single sentiment score limits the ability to capture semantic nuance, curiosity framing, or instructional intent.
--Channel-level leakage
-Channel identifiers may implicitly encode historical popularity, inflating predictive performance.
--Static engagement ratios
-Engagement metrics are measured post-publication and may not reflect early-stage prediction scenarios.
--Domain specificity
-Results are based on baking-related content and may not generalize to other YouTube niches.
+- Simplistic NLP representation: Using a single sentiment score limits the ability to capture semantic nuance, curiosity framing, or instructional intent.
+-Channel-level leakage: Channel identifiers may implicitly encode historical popularity, inflating predictive performance.
+-Static engagement ratios: Engagement metrics are measured post-publication and may not reflect early-stage prediction scenarios.
+-Domain specificity: Results are based on baking-related content and may not generalize to other YouTube niches.
 
 ## 8. Conclusion and Next Steps
 
 This project demonstrates that YouTube video performance can be predicted reasonably well using metadata alone, with Random Forest models achieving strong accuracy and macro F1 scores. Engagement and timing features emerge as the most reliable predictors, while simple title sentiment features provide limited additional value.
 
 Future work could improve performance by:
--Incorporating richer NLP representations (e.g., transformer-based embeddings)
--Modeling early engagement dynamics over time
--Removing or controlling for channel identity to test generalization
--Extending analysis to video descriptions or thumbnails
+- Incorporating richer NLP representations (e.g., transformer-based embeddings)
+- Modeling early engagement dynamics over time
+- Removing or controlling for channel identity to test generalization
+- Extending analysis to video descriptions or thumbnails
 
 Overall, the findings highlight the importance of feature quality over feature novelty, and show that well-engineered metadata can outperform shallow NLP features in real-world prediction tasks.
