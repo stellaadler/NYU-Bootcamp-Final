@@ -55,20 +55,64 @@ To understand feature influence, two interpretability approaches were used:
 
 ### Model Performance Summary
 
-The table below summarizes final model performance:
-- Best overall model: Tuned Random Forest (metadata only)
-- Test Accuracy: ~0.75
-- Test Macro F1: ~0.63
+Model performance was evaluated using accuracy and macro-averaged F1 score, with macro F1 prioritized due to class imbalance across view-count buckets. Across both feature sets (metadata-only and metadata + NLP), tree-based models consistently outperformed linear models, indicating that YouTube video performance is driven by nonlinear relationships among features.
 
-Notably, metadata-only Random Forest slightly outperformed all metadata + NLP models, including tuned Gradient Boosting. This indicates that structural engagement signals dominate predictive power in this task.
+The strongest overall results were achieved by:
 
-### Why Metadata Outperforms NLP
+Random Forest (tuned, metadata-only)
+- Accuracy ≈ 0.72
+- Macro F1 ≈ 0.60
 
-Engagement-based features such as likes per view, comments per view, and engagement rate consistently ranked as the most important predictors. These variables directly encode audience response, making them strong proxies for video popularity.
+Gradient Boosting (tuned, metadata + NLP)
+- Accuracy ≈ 0.73
+- Macro F1 ≈ 0.62
 
-Temporal features (year, hour, month) also contributed meaningfully, reflecting platform-level trends and posting-time effects.
+While Gradient Boosting achieved the highest macro F1 overall, the performance gain relative to the tuned Random Forest was modest, suggesting diminishing returns from increased model complexity.
 
-In contrast, title sentiment features provided minimal incremental value.
+### Baseline Model Comparison
+
+Across both feature sets:
+
+- Logistic Regression consistently underperformed, with macro F1 scores around 0.41–0.43
+- Decision Trees performed moderately, improving substantially over linear models but remaining less stable than ensemble methods
+- Random Forest dominated baseline comparisons, delivering the strongest and most consistent performance
+
+This pattern strongly suggests that video popularity is governed by nonlinear and interaction-driven effects, rather than additive linear relationships. Features such as engagement rate, timing, and channel identity interact in complex ways that linear classifiers fail to capture.
+
+### Effect of Feature Sets (Metadata vs. Metadata + NLP)
+
+Contrary to expectations, adding NLP-derived features (e.g., sentiment scores) resulted in only marginal improvements:
+- Macro F1 gains were small and inconsistent
+- Metadata-only Random Forest performed nearly as well as NLP-augmented models
+
+This indicates that:
+- Engagement-based metadata already captures much of the signal that text sentiment attempts to proxy
+- Title and caption sentiment may be too noisy or shallow to significantly improve predictive power
+- Viewer response (likes, comments, engagement rate) is a stronger indicator of performance than textual tone alone
+
+### Confusion Matrix Analysis (Tuned Random Forest)
+
+The confusion matrix for the tuned Random Forest reveals several important patterns:
+
+- The model performs best on high-volume classes (100K–500K, 500K+), with strong diagonal concentration
+- Misclassifications tend to occur between adjacent buckets, rather than extreme jumps (e.g., 0–10K → 500K+), indicating that the model has learned an ordinal structure
+- Mid-range categories (50K–100K) are the hardest to classify, reflecting overlapping engagement behavior across neighboring tiers
+
+This behavior suggests that while the model is effective at learning relative popularity levels, class imbalance and fuzzy boundaries between tiers limit perfect separation.
+
+### Feature Importance and Interpretability
+
+Feature importance and SHAP analyses reinforce these findings:
+
+- Engagement efficiency metrics (likes per view, comments per view, engagement rate) dominate predictions
+- Video duration and timing features (hour, month, year) play a secondary but meaningful role
+- Channel identity features matter, but less than engagement behavior
+
+SHAP interaction plots further reveal that:
+- Engagement metrics interact strongly with duration and timing
+- No single feature drives performance alone; rather, combinations of features determine outcomes
+
+This explains why ensemble tree models outperform linear baselines: they are better equipped to capture conditional dependencies and feature interactions inherent in content performance.
 
 ## 5. Interpreting the Limited Impact of Sentiment Features
 
